@@ -2,200 +2,118 @@
 
 # ⚡ Power Trading – Intraday Market Analysis & Forecasting
 
-## 📌 Project Overview
+## 1️⃣ Background and Overview
 
-This project focuses on **intraday power trading analysis** using data from the **Indian Energy Exchange (IEX)**. Electricity markets are highly dynamic, operating on short time blocks (15-minute intervals), where demand–supply balance directly impacts prices and volumes.
+Electricity power markets operate in a highly dynamic environment where demand and supply must be balanced in real time. Intraday power trading allows participants to adjust their positions closer to real time, making accurate price and volume analysis critical.
 
-The objective of this project is to:
+This project focuses on analyzing **Intraday Power Trading data from the Indian Energy Exchange (IEX)** at a **15-minute time block level**. The goal is to transform raw market data into meaningful insights and reliable short-term price forecasts that can support traders, grid operators, and energy analysts in decision-making.
 
-* Analyze intraday power trading behavior
-* Understand bid dynamics, cleared volumes, and price movements
-* Build and compare forecasting models for **Market Clearing Price (MCP)**
-* Present insights through an **interactive Streamlit dashboard**
-
-This project combines **data engineering, exploratory data analysis (EDA), statistical analysis, forecasting, and visualization** to support data-driven decision-making in energy markets.
+The project delivers an **end-to-end analytics pipeline**, covering data collection, preprocessing, exploratory analysis, forecasting, and visualization through an interactive Streamlit dashboard.
 
 ---
 
-## 🧠 Business Problem
+## 2️⃣ Data Structure and Overview
 
-Power traders, grid operators, and analysts need **accurate short-term price forecasts** and **clear visibility into market behavior** to:
+### Data Source
 
-* Optimize buy/sell bidding strategies
-* Anticipate price spikes and volatility
-* Improve intraday operational decisions
-
-Manual analysis of high-frequency power market data is inefficient. This project automates data collection, analysis, and forecasting into a single analytical pipeline.
-
----
-
-## 📂 Data Source
-
-* **Source:** Indian Energy Exchange (IEX)
-* **Method:** Web scraping from IEX market snapshot
+* **Platform:** Indian Energy Exchange (IEX)
+* **Collection Method:** Web scraping (Market Snapshot)
+* **Market Type:** Intraday / Real-Time Market
 * **Granularity:** 15-minute time blocks
-* **Market Focus:** Intraday / Real-Time Market
 
-### Key Features
+### Dataset Structure
 
-* Purchase Bid (MW)
-* Sell Bid (MW)
-* Market Cleared Volume (MW)
-* Final Scheduled Volume (MW)
-* Market Clearing Price (Rs/MWh)
-* Date, Hour, and Time Block
+Each record represents a single 15-minute trading interval and includes:
 
----
+* **Date** – Trading date
+* **Hour** – Hour of the day
+* **Time_Block** – 15-minute interval
+* **Purchase_Bid_MW** – Total buy bids submitted (MW)
+* **Sell_Bid_MW** – Total sell bids submitted (MW)
+* **Market_Cleared_Volume (MCV_MW)** – Volume cleared by the market (MW)
+* **Final_Scheduled_Volume_MW** – Final scheduled electricity volume (MW)
+* **Market_Clearing_Price (MCP_Rs_MWh)** – Price at which supply meets demand
 
-## 🔧 Tech Stack & Tools
+### Data Processing
 
-* **Programming:** Python
-* **Libraries:** Pandas, NumPy, BeautifulSoup, Matplotlib, Seaborn, Scikit-learn, Statsmodels
-* **Database:** MySQL (SQLAlchemy integration)
-* **Visualization:** Matplotlib, Seaborn
-* **Dashboard:** Streamlit
-* **Forecasting Models:** ARIMA, SARIMA, ETS, Holt-Winters, Gradient Boosting
-
----
-
-## 🔄 Project Workflow
-
-### 1️⃣ Data Collection
-
-* Web scraping of real-time market data from IEX
-* HTML tables parsed using BeautifulSoup
-* Data converted into Pandas DataFrames
-
-### 2️⃣ Data Cleaning & Preprocessing
-
-* Standardized column names
-* Datetime parsing for Date and Time Blocks
-* Numeric conversion with error handling
-* Missing value treatment using mean imputation
-* Outlier treatment using **Interquartile Range (IQR)**
-
-### 3️⃣ Feature Scaling
-
-* **Min-Max Normalization** for modeling
-* **Z-score Standardization** for statistical analysis
-
-### 4️⃣ Statistical Analysis
-
-Computed **statistical moments** for market variables:
-
-* Mean
-* Variance
-* Skewness
-* Kurtosis
-
-These help understand volatility, asymmetry, and distribution behavior of power prices and volumes.
+* Missing values handled using mean imputation
+* Outliers treated using the **Interquartile Range (IQR)** method
+* Numeric features normalized and standardized for analysis and modeling
+* Cleaned data stored in **MySQL** for scalability and reuse
 
 ---
 
-## 📊 Exploratory Data Analysis (EDA)
+## 3️⃣ Executive Summary
 
-Key visual analyses include:
+* Intraday power prices and volumes show **strong time-of-day dependency**
+* Peak hours exhibit **higher volatility** in both bids and prices
+* Market cleared volume closely follows final scheduled volume
+* Moderate correlation exists between **demand pressure and price levels**
+* Among multiple forecasting approaches, **statistical and machine learning models provide reliable short-term MCP predictions**
 
-* **Boxplots:** Detect volatility and extreme bid/price values
-* **Time Series Plots:** MCP movement across time blocks
-* **Histograms & KDE:** Distribution of market clearing prices
-* **Pairplots:** Relationships between bids, volumes, and prices
-* **Correlation Heatmap:** Strength of relationships among variables
-
-### Key Insights
-
-* Strong relationship between cleared volume and scheduled volume
-* Time-of-day effects visible in both price and volume
-* Higher volatility during peak demand hours
-* Moderate correlation between MCP and trading volume
+The project demonstrates that combining **statistical analysis with forecasting models** significantly improves understanding and prediction of intraday electricity prices.
 
 ---
 
-## 🗄️ Database Integration
+## 4️⃣ Insights Deep Dive
 
-* Cleaned data stored in **MySQL** database
-* Table: `powertrading_marketfinal`
-* Enables reusable analysis, scalability, and dashboard connectivity
+### 🔹 Intraday Trading Patterns
 
----
+* Buy and sell bids fluctuate across time blocks, indicating changing demand and supply conditions
+* Morning and evening peak hours show increased bidding activity
 
-## 🔮 Forecasting Models
+### 🔹 Price Behavior (MCP)
 
-The target variable for forecasting is **Market Clearing Price (MCP)**.
+* MCP displays noticeable spikes during high-demand periods
+* Distribution analysis shows price clustering with occasional extreme values, indicating volatility
 
-### Models Implemented
+### 🔹 Volume Dynamics
 
-* **ARIMA:** Captures short-term linear trends
-* **SARIMA:** Incorporates seasonality
-* **ETS (Error-Trend-Seasonality):** Component-based forecasting
-* **Holt-Winters:** Trend + seasonality smoothing
-* **Gradient Boosting Regressor:** Machine learning-based approach
+* Market Cleared Volume and Final Scheduled Volume are strongly correlated
+* High sell bids do not always translate to high cleared volume, highlighting market competition
 
-### Model Evaluation
+### 🔹 Correlation Analysis
 
-* Train-Test split: 80%-20%
-* Metric: **RMSE (Root Mean Squared Error)**
-* RMSE scores rescaled to a common range (98–99) for easier comparison
+* Positive correlation between cleared volume and scheduled volume
+* Moderate relationship between MCP and volume, confirming demand–supply influence on pricing
 
-✅ **Best-performing model is automatically selected** based on lowest RMSE.
+### 🔹 Forecasting Performance
 
----
+Models evaluated:
 
-## 📈 Interactive Dashboard (Streamlit)
+* ARIMA
+* SARIMA
+* ETS
+* Holt-Winters
+* Gradient Boosting Regressor
 
-The Streamlit app provides:
-
-* Data preview and descriptive statistics
-* Correlation heatmap
-* MCP time series visualization
-* MCP distribution analysis
-* Forecasting model comparison with best model highlight
-
-This enables **non-technical users** to interact with the analysis easily.
+All models were evaluated using RMSE, and the **best-performing model was automatically selected**. Machine learning and seasonal models performed better during volatile periods.
 
 ---
 
-## ▶️ How to Run the Project
+## 5️⃣ Recommendations
 
-### 1. Clone the Repository
+### For Power Traders
 
-```bash
-git clone <repository-url>
-cd power-trading-analysis
-```
+* Focus on peak-hour bidding strategies where price volatility is highest
+* Use short-term MCP forecasts to optimize intraday buy/sell positions
 
-### 2. Install Dependencies
+### For Grid Operators
 
-```bash
-pip install -r requirements.txt
-```
+* Monitor high-volatility time blocks to improve load balancing
+* Use cleared vs scheduled volume gaps to anticipate congestion risks
 
-### 3. Setup MySQL
+### For Analysts & Decision Makers
 
-* Create a database (e.g., `datascience`)
-* Update MySQL credentials in the Python scripts
+* Combine statistical forecasting with machine learning for better accuracy
+* Automate real-time data ingestion for faster market response
 
-### 4. Run Data Pipeline
+### Future Scope
 
-```bash
-python Power Trading Project.py
-```
-
-### 5. Launch Streamlit App
-
-```bash
-streamlit run Power Trading_Stream lit.py
-```
-
----
-
-## 🚀 Future Enhancements
-
-* Integration with live API instead of scraping
-* Advanced deep learning models (LSTM, GRU)
-* Intraday demand forecasting
-* Deployment on cloud (AWS/GCP)
-* Automated daily data refresh
+* Integrate deep learning models (LSTM/GRU)
+* Enable live market data updates
+* Deploy dashboard on cloud platforms (AWS/GCP)
+* Extend analysis to Day-Ahead and Term-Ahead markets
 
 ---
 
@@ -203,15 +121,14 @@ streamlit run Power Trading_Stream lit.py
 
 **Vaishnavi Cheera**
 Master’s in Business Analytics
-Focus: Energy Analytics | Forecasting | Data Science
+Focus Areas: Energy Analytics | Forecasting | Data Science
 
 ---
 
-## ⭐ Key Takeaway
-
-This project demonstrates an **end-to-end analytics pipeline**—from raw market data to actionable insights and forecasts—tailored for **real-world power trading and energy market analysis**.
+⭐ *This project demonstrates a real-world application of analytics and forecasting in electricity markets, bridging business understanding with technical implementation.*
 
 ## 📸 Dashboard Preview
 
-<img width="1735" height="736" alt="Powertrading_dashborad" src="https://github.com/user-attachments/assets/f0074a32-f218-4821-82c3-5663bad8717c" />
+<img width="1735" height="736" alt="Powertrading_dashborad" src="https://github.com/user-attachments/assets/f1de381d-6fb1-4232-9758-fa9bfe4aaed0" />
+
 
